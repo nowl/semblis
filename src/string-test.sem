@@ -1,0 +1,31 @@
+; mode: -*- scheme -*-
+
+(define (dan x)
+  (display x)
+  (newline))
+
+(dan "testing str:+")
+(dan (str:+ "hey" " it " "works!"))
+(dan "should be: hey it works!")
+(newline)
+
+(dan "testing str:num")
+(dan (+ (str:num "10")
+        (str:num "11")))
+(dan "should be: 21")
+(newline)
+
+(dan "testing str:split")
+(dan (str:split "this,is,a,test" ","))
+(dan "should be: (this is a test )")
+(newline)
+
+(dan "testing str:find")
+(dan (str:find "this,is,a,test" ",is"))
+(dan "should be: 4")
+(newline)
+
+(dan "testing str:trim")
+(dan (str:trim "   test		  	  "))
+(dan "should be: test")
+(newline)

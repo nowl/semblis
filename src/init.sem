@@ -1,0 +1,47 @@
+(define (display-and-newline str)
+  (display str)
+  (newline))
+
+;; example using a let and a while loop
+
+(display-and-newline "example 1")
+
+(let ((i 5))
+  (while (>= i 0)
+    (display-and-newline i)
+    (set i (- i 1))))
+
+;; example using define, the difference here is that "i" is now in the
+;; global environment
+
+(display-and-newline "example 2")
+
+(define i 5)
+(while (>= i 0)
+  (display-and-newline i)
+  (set i (- i 1)))
+
+;; example of if
+
+(display-and-newline "example 3")
+
+(set i 8)
+(while (>= i 0)
+  (if (> i 4)
+      (display-and-newline "i greater than 4") ;; this is the "then"
+      (display-and-newline "i less than 4"))   ;; this is the "else"
+  (set i (- i 1)))
+
+;; contrived example using cond
+
+(display-and-newline "example 4")
+
+(set i 8)
+(while (>= i 0)
+  (cond ((>= i 6) (let ()
+                    (display-and-newline "i greater than or equal to 6")
+                    (display "i = ")
+                    (display-and-newline i)))         
+        ((>= i 3) (display-and-newline "i greater than or equal to 3"))
+        (true     (display-and-newline "i less than 3")))
+  (set i (- i 1)))

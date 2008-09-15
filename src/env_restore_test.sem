@@ -1,0 +1,33 @@
+; mode: -*- scheme -*-
+(define (pan str)
+  (display str)
+  (newline))
+
+(define a 5)
+
+(env:save)
+
+(define a 8)
+(display "after env save and value change: ")
+(pan a)
+
+(env:restore)
+
+(display "after env restore: ")
+(pan a)
+
+
+
+;; testing save/restore a second time
+
+(env:save)
+
+(define (test-func)
+  (pan "blah blah blah"))
+
+(test-func)
+
+(env:restore)
+
+; calling this function will produce an error as expected
+;(test-func)

@@ -1,0 +1,58 @@
+
+(define hello "chieh.jpg")
+(display (str:split hello "."))
+(newline)
+(display hello)
+
+
+;(define friend (list "chieh.jpg" "john.mp3" "paul.ogg" "sucking.ogg" "another.png" "sextape.ogg"))
+;
+;(define (getLastItem lis)
+;	(define item nil)
+;	(while (not (= (first lis) nil))
+;		(set item (first lis))
+;		(set lis (rest lis)))
+;	item)
+;
+;
+;(define (extFilter lis ext)
+;	(define filteredList (list))
+;	(while (not (= (first lis) nil))
+;		(display (first lis))
+;		(newline)
+;		(define currentFile (first lis))	
+;		(display (str:split currentFile "."))
+;		(newline)
+;		(set lis (rest lis))))
+;
+;
+;(extFilter friend "hello")
+;
+;(display friend)
+
+;(display (getLastItem friend))
+;(newline)
+
+;
+;(define (numb) 
+;  	(define help "hellllp")
+;	(+ 2 3)
+;	(+ 1 1)
+;	help)
+;
+;(display "numb = ")
+;(display (numb))
+;(newline)
+;
+;
+;;		(set lis (rest lis))))
+;;
+;;(display item)
+;;(newline)
+;
+;;(define hello "hello.wd")
+;;(define form (str:split hello "."))
+;;(display (first form))
+;;(newline)
+;;(display (rest form))
+;;(newline)

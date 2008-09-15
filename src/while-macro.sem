@@ -1,0 +1,12 @@
+; mode: -*- scheme -*-
+
+(macro (while form &rest)
+  (list 'begin
+   (list 'define
+         '(#while-loop#)
+         (list 'if
+               form
+               (list 'begin
+                     (push 'begin &rest)
+                     '(#while-loop#))))
+   (list '#while-loop#)))

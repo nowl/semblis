@@ -1,0 +1,18 @@
+#!/bin/sh
+
+./convWrapper.py ../../webMain/MoviePlayer.h
+./convWrapper.py ../../webMain/iaSystem.h
+./convWrapper.py ../../webMain/mouseCollision.h
+./convWrapper.py ../../webMain/semAnimation.h
+./convWrapper.py ../../webMain/semCallback.h
+./convWrapper.py ../../webMain/semCamera.h
+./convWrapper.py ../../webMain/semCookies.h
+./convWrapper.py ../../webMain/semCreation.h
+./convWrapper.py ../../webMain/semDownload.h
+./convWrapper.py ../../webMain/semGuiCreation.h
+./convWrapper.py ../../webMain/semGuiOperation.h
+./convWrapper.py ../../webMain/semLight.h
+./convWrapper.py ../../webMain/semOperation.h
+./convWrapper.py ../../webMain/semSignals.h
+./convWrapper.py ../../webMain/semPmgr.h
+./convWrapper.py ../../soundLibrary/soundDevice.h

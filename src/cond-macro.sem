@@ -1,0 +1,33 @@
+; mode: -*- scheme -*-
+
+;(cond ((= 1 2) (display "testing"))
+;      ((= 1 3) (display "testing2"))
+;      (1 (display "correct")))
+
+;(if (= 1 2)
+;    (display "testing")
+;    (if (= 1 3)
+;        (display "testing2")
+;        (if 1
+;            (display "correct"))))
+
+
+
+(macro (cond &rest)
+  (define (get-if form) (first (first form)))
+  (define (get-consequent form) (push 'begin (rest (first form))))
+  (define (get-alternative form) (make-if (rest form)))
+  (define (make-if form) (if form
+                             (list 'if
+                                   (get-if form)
+                                   (get-consequent form)
+                                   (get-alternative form))))
+  (make-if &rest))
+
+
+;(cond ((= 1 2) (display "testing"))
+;      ((= 1 3) (display "testing2"))
+;      ('true (display "correct!")
+;             (newline)))
+;(display "finished")
+;(newline)

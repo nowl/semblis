@@ -1,0 +1,105 @@
+(import "character-mesh.sem")
+
+; string -> lookup-num conversion utils
+; returns numbers in reverse order
+(define (lookup-meshes-by-string body-mesh-str
+                                 body-text-str
+                                 hair-mesh-str
+                                 hair-text-str)
+  
+  ;; this seems way more complicated than it needs to be.. but it does
+  ;; seem to work
+
+  (define i 0)
+  (define result -1)
+  (while (< i (num-body-meshes))
+    (if (= body-mesh-str (get-body-mesh i))
+        (define result i))
+    (set i (+ i 1)))
+  (define results (list result))
+
+  (define body-mesh-num result)
+  (set result -1)
+  (if (> body-mesh-num -1)
+      (let ()
+        (set i 0)
+        (while (< i (num-body-textures body-mesh-num))
+          (if (= body-text-str (get-body-texture body-mesh-num i))
+              (define result i))
+          (set i (+ i 1)))
+        (set results (push result results))
+
+        
+        (define body-texture-num result)
+        (set result -1)
+        (if (> body-texture-num -1)
+            (let ()
+              (set i 0)
+              (while (< i (num-hair-meshes body-mesh-num
+                                           body-texture-num))
+                (if (= hair-mesh-str (get-hair-mesh body-mesh-num
+                                                    body-texture-num
+                                                    i))
+                    (define result i))
+                (set i (+ i 1)))
+              (set results (push result results))
+
+
+
+              (define hair-mesh-num result)
+              (set result -1)
+              (if (> hair-mesh-num -1)
+                  (let ()
+                    (set i 0)
+                    (while (< i (num-hair-textures body-mesh-num
+                                                   body-texture-num
+                                                   hair-mesh-num))
+                      (if (= hair-text-str (get-hair-texture body-mesh-num
+                                                             body-texture-num
+                                                             hair-mesh-num
+                                                             i))
+                          (define result i))
+                      (set i (+ i 1)))
+                    (set results (push result results))))))))
+  
+  results)
+
+(define (set-initial-states body-mesh-str
+                            body-text-str
+                            hair-mesh-str
+                            hair-text-str)
+
+  (define lookups (lookup-meshes-by-string body-mesh-str
+                                           body-text-str
+                                           hair-mesh-str
+                                           hair-text-str))
+  (if (= (first lookups) -1)
+      (let ()
+        (display "string mis-match")
+        (newline)
+        
+        (set body-mesh-num 0)
+        (set body-text-num 0)
+        (set hair-mesh-num 0)
+        (set hair-text-num 0))
+      (let ()
+        ; they come out in reverse order
+        (set hair-text-num (nth 0 lookups))
+        (set hair-mesh-num (nth 1 lookups))
+        (set body-text-num (nth 2 lookups))
+        (set body-mesh-num (nth 3 lookups)))))
+        
+; testing
+(set-initial-states "anakin.mesh"
+                    "SOLID/TEX/anakinUV.png"
+                    "anakinHair2.mesh"
+                    "anakinHairColor2")
+(display (get-strings))
+(newline)
+
+(set-initial-states "sora.mesh"
+                    "soraTexture_final2"
+                    "soraHair2.mesh"
+                    "soraHair4")
+(display (get-strings))
+(newline)

@@ -1,0 +1,41 @@
+; -*- mode: scheme -*-
+
+(define (test a)
+  (if a
+      (let ()
+        (display "passed")
+        (newline))
+      (let ()
+        (display "..failed")
+        (newline))))      
+
+; equality
+(test (= "test" "test"))
+(test (not (= "test" "test2")))
+
+; concatination
+(test (= (str:+ "test" "1234") "test1234"))
+(test (= (str:+ "test" "1234" "blah blah blah") "test1234blah blah blah"))
+
+(test (= (str:+ 10) "10"))
+(test (= (str:+ 1.1234) "1.123400"))
+(test (= (str:+ 1 2 3 "blah" 4 5 6) "123blah456"))
+
+; to numbers and back again
+(test (= (int (str:num (str:+ 4321)))
+         4321))
+
+; split test
+(display (str:split "1,2,a3,b4,c5" ","))
+(newline)
+
+; trim test
+(display (str:trim "               pass               "))
+(display "ed :)")
+(newline)
+
+; find test
+(define t "this is a testing")
+(test (= (str:find t "test") 10))
+(define t "this is blah blah test")
+(test (= (str:find t "blah") 8))

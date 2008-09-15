@@ -1,0 +1,2 @@
+(define st "(\"hello world\")")
+(display st)

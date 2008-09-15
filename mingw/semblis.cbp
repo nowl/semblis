@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="semblis" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="..\..\..\libWin\semblis\mingw\semblis" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+					<Add option="-DUSE_DLL_EXPORT" />
+					<Add directory="..\include" />
+					<Add directory="..\..\..\libWin\zlib\include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+					<Add library="..\..\..\libWin\zlib\mingw\zlib.dll" />
+				</Linker>
+			</Target>
+			<Target title="debug">
+				<Option output="..\..\..\libWin\semblis\mingwDebug\semblis" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
+					<Add option="-DUSE_DLL_EXPORT" />
+					<Add directory="..\include" />
+					<Add directory="..\..\..\libWin\zlib\include" />
+				</Compiler>
+				<Linker>
+					<Add library="user32" />
+					<Add library="..\..\..\libWin\zlib\mingw\zlib.dll" />
+				</Linker>
+			</Target>
+			<Target title="ReleaseToWinLib">
+				<Option output="..\..\..\tools\iamarWin\semblis" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+					<Add option="-DUSE_DLL_EXPORT" />
+					<Add directory="..\include" />
+					<Add directory="..\..\..\libWin\zlib\include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+					<Add library="..\..\..\libWin\zlib\mingw\zlib.dll" />
+				</Linker>
+			</Target>
+		</Build>
+		<Linker>
+			<Add option="-Wl,--stack=0x10000000" />
+		</Linker>
+		<Unit filename="..\include\ForeignMacros.h" />
+		<Unit filename="..\include\classifier.h" />
+		<Unit filename="..\include\config.h" />
+		<Unit filename="..\include\data.h" />
+		<Unit filename="..\include\environment.h" />
+		<Unit filename="..\include\eval.h" />
+		<Unit filename="..\include\gc.h" />
+		<Unit filename="..\include\hashtable.h" />
+		<Unit filename="..\include\iamarDocs.h" />
+		<Unit filename="..\include\lib_loader.h" />
+		<Unit filename="..\include\logger.h" />
+		<Unit filename="..\include\macros.h" />
+		<Unit filename="..\include\output.h" />
+		<Unit filename="..\include\prims.h" />
+		<Unit filename="..\include\reader.h" />
+		<Unit filename="..\include\semblis.h" />
+		<Unit filename="..\include\types.h" />
+		<Unit filename="..\include\utils.h" />
+		<Unit filename="..\include\windll.h" />
+		<Unit filename="..\src\libsemblis\classifier.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\config.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\core_prims.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\data.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\engine.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\environment.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\eval.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\gc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\hashtable.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\lib_loader.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\logger.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\output.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\pretty_printer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\reader.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\search_dir.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\src\libsemblis\utils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

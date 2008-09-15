@@ -1,0 +1,11 @@
+; mode: -*- scheme -*-
+
+;(let ((a 5)
+;      (b 2))
+;  (display (+ a b))
+;  (newline))
+
+((lambda (a b)
+   (begin
+     (display (+ a b))
+     (newline))) 5 2)

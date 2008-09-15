@@ -1,0 +1,23 @@
+Semblis is intended to be a simple embedded language that is both easy to
+use and easy to extend. It is not intended to be a general purpose
+programming language. The general use case is in having a tightly controlled
+language one wishes to use to "script" a low-level language such as C or
+C++. The word Semblis is a play on words meaning simple embedded lisp. The
+syntax is very close to scheme and is in fact loosely modeled on the
+explicit control evaluator presented in Structure and Interpretation of
+Computer Programs. It does not however support all of the features or
+standard functions of modern scheme standards. What is does support is tail
+recursion optimization, mark-and-sweep garbage collection, unicode strings,
+double-precision arithmetic, macros, data/symbols, and modules/imports.
+
+The core language itself is very small, supporting only a handful of core
+functions. The language is meant to be extended through either macros or
+plugins. The plugin system is controlled through a relatively simple api and
+plugins are specified through config files and loaded at runtime. The macro
+system is likewise very simple but does get the job done.
+
+The purpose of Semblis probably most closely resembles a language such as
+Lua in that it is mainly meant to be embedded inside another piece of
+software. I originally wrote Semblis in order to implement a lisp dialect in
+C. Another project I work on took interest and the direction of Semblis
+became much more refined.

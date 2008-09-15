@@ -1,0 +1,245 @@
+(import "while-macro.sem")
+(import "let-macro.sem")
+
+(define (null a)
+  (= nil a))
+
+(define (nth n lis)
+  (if (null lis) nil)
+  (while (and (not (null (first lis)))
+              (> n 0))
+    (set lis (rest lis))
+    (set n (- n 1)))
+  (first lis))
+
+(define (length lis)
+  (if (null lis) 0)
+  (define count 0)
+  (while (not (null (first lis)))
+    (set count (+ count 1))
+    (set lis (rest lis)))
+  count)
+
+(define data '("anakin.mesh" ("SOLID/TEX/anakinUV.png" ("anakinHair1.mesh" ("Material.001/SOLID/TEX/Hair_Blonde_final.jpg"
+                                                                            "anakinHairColor2")
+                                                        "anakinHair2.mesh" ("Material.001/SOLID/TEX/Hair_Blonde_final.bmp"
+                                                                            "anakinHairColor2")
+                                                        "HeadShield.mesh" ("Material.002/SOLID/TEX/copperHead_final.jpg/VertCol"))
+                              "anakinBodyUV2" ("anakinHair1.mesh" ("Material.001/SOLID/TEX/Hair_Blonde_final.jpg"
+                                                                   "anakinHairColor2")
+                                               "anakinHair2.mesh" ("Material.001/SOLID/TEX/Hair_Blonde_final.bmp"
+                                                                   "anakinHairColor2")
+                                               "HeadShield.mesh" ("Material.002/SOLID/TEX/copperHead_final.jpg/VertCol")))
+               "sora.mesh" ("SOLID/TEX/soraTexture_fina.jpg" ("soraHair.mesh" ("SOLID/TEX/soraHairTexture_final.jpg")
+                                                              "soraHair2.mesh" ("soraHair2"
+                                                                                "soraHair3"
+                                                                                "soraHair4"))
+                            "soraTexture_final2" ("soraHair.mesh" ("SOLID/TEX/soraHairTexture_final.jpg")
+                                                  "soraHair2.mesh" ("soraHair2"
+                                                                    "soraHair3"
+                                                                    "soraHair4"))
+                            "soraTexture_final3" ("soraHair.mesh" ("SOLID/TEX/soraHairTexture_final.jpg")
+                                                  "soraHair2.mesh" ("soraHair2"
+                                                                    "soraHair3"
+                                                                    "soraHair4")))
+               "stacy.mesh" ("Material.002/SOLID/TEX/mia2.png" ("stacyHair1.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                                   "stacyHair2Material")
+                                                                "stacyHair2.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                                   "stacyHair2Material")
+                                                                "stacyHair3.mesh" ("Material/SOLID/TEX/Stacyhair3.jpg")
+                                                                "HeadShield.mesh" ("Material.002/SOLID/TEX/copperHead_final.jpg/VertCol"))
+                             "stacyBodyUV2" ("stacyHair1.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                "stacyHair2Material")
+                                             "stacyHair2.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                "stacyHair2Material")
+                                             "stacyHair3.mesh" ("Material/SOLID/TEX/Stacyhair3.jpg")
+                                             "HeadShield.mesh" ("Material.002/SOLID/TEX/copperHead_final.jpg/VertCol")))
+               "sakura.mesh" ("sakuraTexture_final5.jpg" ("stacyHair1.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                             "stacyHair2Material")
+                                                          "stacyHair2.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                             "stacyHair2Material")
+                                                          "stacyHair3.mesh" ("Material/SOLID/TEX/Stacyhair3.jpg")
+                                                          "HeadShield.mesh" ("Material.002/SOLID/TEX/copperHead_final.jpg/VertCol"))
+                              "sakuraTexture_final4.jpg" ("stacyHair1.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                             "stacyHair2Material")
+                                                          "stacyHair2.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                             "stacyHair2Material")
+                                                          "stacyHair3.mesh" ("Material/SOLID/TEX/Stacyhair3.jpg")
+                                                          "HeadShield.mesh" ("Material.002/SOLID/TEX/copperHead_final.jpg/VertCol"))
+                              "sakuraTexture_final3.jpg" ("stacyHair1.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                             "stacyHair2Material")
+                                                          "stacyHair2.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                             "stacyHair2Material")
+                                                          "stacyHair3.mesh" ("Material/SOLID/TEX/Stacyhair3.jpg")
+                                                          "HeadShield.mesh" ("Material.002/SOLID/TEX/copperHead_final.jpg/VertCol"))
+                              "sakuraTexture_final2.jpg" ("stacyHair1.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                             "stacyHair2Material")
+                                                          "stacyHair2.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                             "stacyHair2Material")
+                                                          "stacyHair3.mesh" ("Material/SOLID/TEX/Stacyhair3.jpg")
+                                                          "HeadShield.mesh" ("Material.002/SOLID/TEX/copperHead_final.jpg/VertCol"))
+                              "sakuraTexture_final.jpg" ("stacyHair1.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                             "stacyHair2Material")
+                                                          "stacyHair2.mesh" ("DefaultLib_Material18/SOLID/TEX/hairLight.png"
+                                                                             "stacyHair2Material")
+                                                          "stacyHair3.mesh" ("Material/SOLID/TEX/Stacyhair3.jpg")
+                                                          "HeadShield.mesh" ("Material.002/SOLID/TEX/copperHead_final.jpg/VertCol")))))
+                              
+
+; counting routines
+(define (num-body-meshes)
+  (int (/ (length data) 2)))
+
+(define (num-body-textures mesh-num)
+  (let ((textures (nth (int (+ (* 2 mesh-num) 1))
+                       data)))
+    (int (/ (length textures) 2))))
+
+(define (num-hair-meshes mesh-num body-num)
+  (let ((textures (nth (int (+ (* 2 mesh-num) 1))
+                       data)))
+    (let ((hair-meshes (nth (int (+ (* 2 body-num) 1))
+                          textures)))
+      (int (/ (length hair-meshes) 2)))))
+
+(define (num-hair-textures mesh-num body-num hair-num)
+  (let ((textures (nth (int (+ (* 2 mesh-num) 1))
+                       data)))
+    (let ((hair-meshes (nth (int (+ (* 2 body-num) 1))
+                            textures)))
+      (let ((hair-textures (nth (int (+ (* 2 hair-num) 1))
+                                hair-meshes)))
+        (length hair-textures)))))
+
+; extraction routines
+
+(define (get-body-mesh mesh-num)
+  (nth (int (* 2 mesh-num)) data))
+
+(define (get-body-texture mesh-num texture-num)
+  (let ((body (nth (int (+ (* 2 mesh-num) 1))
+                   data)))
+    (nth (int (* 2 texture-num)) body)))
+
+(define (get-hair-mesh mesh-num
+                       texture-num
+                       hair-mesh-num)
+  (let ((body (nth (int (+ (* 2 mesh-num) 1))
+                   data)))
+    (let ((hair (nth (int (+ (* 2 texture-num) 1))
+                     body)))
+      (nth (int (* 2 hair-mesh-num)) hair))))
+
+(define (get-hair-texture mesh-num
+                          texture-num
+                          hair-mesh-num
+                          hair-texture-num)
+  (let ((body (nth (int (+ (* 2 mesh-num) 1))
+                   data)))
+    (let ((hair (nth (int (+ (* 2 texture-num) 1))
+                     body)))
+      (let ((hair-mesh (nth (int (+ (* 2 hair-mesh-num) 1))
+                        hair)))
+        (nth hair-texture-num hair-mesh)))))
+
+; counters
+(define body-mesh-num 0)
+(define body-text-num 0)
+(define hair-mesh-num 0)
+(define hair-text-num 0)
+
+; api functions
+
+(define (get-strings)
+  (list (get-body-mesh body-mesh-num)
+        (get-body-texture body-mesh-num
+                          body-text-num)
+        (get-hair-mesh body-mesh-num
+                       body-text-num
+                       hair-mesh-num)
+        (get-hair-texture body-mesh-num
+                          body-text-num
+                          hair-mesh-num
+                          hair-text-num)))
+
+(define (cycle-down-body-mesh)
+  (set body-mesh-num (+ 1 body-mesh-num))
+  (if (>= body-mesh-num (num-body-meshes))
+      (set body-mesh-num 0))
+  (set body-text-num 0)
+  (set hair-mesh-num 0)
+  (set hair-text-num 0)
+  (get-strings))
+
+(define (cycle-down-body-texture)
+  (set body-text-num (+ 1 body-text-num))
+  (if (>= body-text-num (num-body-textures body-mesh-num))
+      (set body-text-num 0))
+  (set hair-mesh-num 0)
+  (set hair-text-num 0)
+  (get-strings))
+
+(define (cycle-down-hair-mesh)
+  (set hair-mesh-num (+ 1 hair-mesh-num))
+  (if (>= hair-mesh-num (num-hair-meshes body-mesh-num
+                                         body-text-num))
+      (set hair-mesh-num 0))
+  (set hair-text-num 0)
+  (get-strings))
+
+(define (cycle-down-hair-texture)
+  (set hair-text-num (+ 1 hair-text-num))
+  (if (>= hair-text-num (num-hair-textures body-mesh-num
+                                           body-text-num
+                                           hair-mesh-num))
+      (set hair-text-num 0))
+  (get-strings))
+
+(define (cycle-up-body-mesh)
+  (set body-mesh-num (- body-mesh-num 1))
+  (if (<= body-mesh-num 0)
+      (set body-mesh-num (- (num-body-meshes) 1)))
+  (set body-text-num 0)
+  (set hair-mesh-num 0)
+  (set hair-text-num 0)
+  (get-strings))
+
+(define (cycle-up-body-texture)
+  (set body-text-num (- body-text-num 1))
+  (if (<= body-text-num 0)
+      (set body-text-num (- (num-body-textures body-mesh-num) 1)))
+  (set hair-mesh-num 0)
+  (set hair-text-num 0)
+  (get-strings))
+
+(define (cycle-up-hair-mesh)
+  (set hair-mesh-num (- hair-mesh-num 1))
+  (if (<= hair-mesh-num 0)
+      (set hair-mesh-num (- (num-hair-meshes body-mesh-num
+                                             body-text-num) 1)))
+  (set hair-text-num 0)
+  (get-strings))
+
+(define (cycle-up-hair-texture)
+  (set hair-text-num (- hair-text-num 1))
+  (if (<= hair-text-num 0)
+      (set hair-text-num (- (num-hair-textures body-mesh-num
+                                               body-text-num
+                                               hair-mesh-num) 1)))
+  (get-strings))
+  
+; display functions
+
+(define (display-strings list-of-strings)
+  (if (not (null list-of-strings))
+      (let ()
+        (display (first list-of-strings))
+        (newline)
+        (display-strings (rest list-of-strings)))))
+
+(cycle-down-body-mesh)
+(cycle-down-body-texture)
+(cycle-down-body-texture)
+(cycle-down-hair-texture)
+(cycle-down-hair-texture)
+(display-strings (cycle-down-hair-texture))

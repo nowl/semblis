@@ -1,0 +1,22 @@
+(import "let-macro.sem")
+(import "while-macro.sem")
+
+(define average 0)
+
+(let ((i 0))
+  (while (< i 1000)
+	 (let ((new-rand (random)))
+	   (display "i = ")
+	   (display i)
+	   (display "   ")
+	   (display "new random = ")
+	   (display new-rand)
+	   (newline)
+	   (set average (+ average new-rand))
+	   (set i (+ 1 i)))))
+
+(set average (/ average 1000))
+(display "average = ")
+(display average)
+(newline)
+

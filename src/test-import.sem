@@ -1,0 +1,11 @@
+; mode: -*- scheme -*-
+(import "while-macro.sem")
+
+(define (dan x)
+  (display x)
+  (newline))
+
+(define i 0)
+(while (< i 10)
+  (dan i)
+  (set i (+ 1 i)))

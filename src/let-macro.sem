@@ -1,0 +1,22 @@
+; mode: -*- scheme -*-
+
+;(let ((a 5)
+;      (b 2))
+;  (display (+ a b))
+;  (newline))
+
+;((lambda (a b)
+;   (display (+ a b))
+;   (newline)) 5 2)
+
+(macro (let forms &rest)
+  (define (get-vars lis)
+    (if lis
+        (push (first (first lis))
+              (get-vars (rest lis)))))
+  (define (get-vals lis)
+    (if lis
+        (push (first (rest (first lis)))
+              (get-vals (rest lis)))))
+  (push (push 'lambda (list (get-vars forms) (push 'begin &rest)))
+        (get-vals forms)))

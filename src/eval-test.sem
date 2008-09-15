@@ -1,0 +1,24 @@
+; mode: -*- scheme -*-
+
+(import "test-import.sem")
+(import "while-macro.sem")
+
+(define (dan x)
+  (display x)
+  (display ", "))
+
+(define i 0)
+(while (< i 10)
+  (dan (random))
+  (set i (+ 1 i)))
+
+(newline)
+(display "finished")
+(newline)
+
+(newline)
+(display (str:+ "testing" " hey-" ))
+(newline)
+
+(display (str:split "this,is,a,test" ","))
+(newline)
