@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <wchar.h>
 
-#include "data.h"
+#include "utils.h"
 #include "macros.h"
 
 //#define PRETTY_PRINT_HEADER
+#define PRETTY_PRINT_ENV_HEADER
 #define PRETTY_PRINT_FOOTER
 
 static void rec_pretty_print(data_t *data,
@@ -42,6 +43,9 @@ static void rec_pretty_print(data_t *data,
     case DT_PROCEDURE:
         OUTPUT_REG("| procedure: \n");
         rec_pretty_print(data->data.procedure.code, indent_level+1);
+        break;
+    case DT_MACRO:
+        OUTPUT_REG("| macro: \n");
         break;
     case DT_VARIABLE:
         OUTPUT_REG("| variable: %s\n", util_to_mbs(data->data.text));
@@ -114,6 +118,13 @@ void semi_print(data_t *data)
                    data->data.procedure.env,
                    data->data.procedure.env);
         break;
+    case DT_MACRO:
+        OUTPUT_REG("macro: args=%d(0x%x) code=%d(0x%x)",
+                   data->data.procedure.args,
+                   data->data.procedure.args,
+                   data->data.procedure.code,
+                   data->data.procedure.code);
+        break;
     case DT_VARIABLE:
         OUTPUT_REG("variable: %s", util_to_mbs(data->data.text));
         break;
@@ -139,4 +150,39 @@ void semi_print(data_t *data)
         OUTPUT_REG("warning: unknown type!!");
         break;
     }
+}
+
+static void rec_pretty_print_env(environment_t *env)
+{
+    int i;
+    hashtable_entry_t* entry;
+
+    for(i=0; i<env->bindings->capacity; ++i) {
+        entry = env->bindings->elements[i];
+        
+        if(entry->key) {
+            data_t *slot = (data_t *)entry->value;
+            OUTPUT_REG("%ls:\n", entry->key);
+            rec_pretty_print(slot, 0);
+
+            if(slot->type == DT_PROCEDURE && slot->data.procedure.env != env) {
+                OUTPUT_REG("printing sub environment\n");
+                rec_pretty_print_env(slot->data.procedure.env);
+                OUTPUT_REG("finished printing sub environment\n");
+            }
+        }
+    }
+}
+
+void pretty_print_env(environment_t *env)
+{
+#ifdef PRETTY_PRINT_ENV_HEADER
+    OUTPUT_REG("---------- printing environment -----------\n");
+#endif
+
+    rec_pretty_print_env(env);
+
+#ifdef PRETTY_PRINT_ENV_HEADER
+    OUTPUT_REG("---------- end printing environment -----------\n");
+#endif
 }

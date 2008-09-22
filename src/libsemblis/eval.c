@@ -321,7 +321,7 @@ static data_t *symbol_to_data(data_t *obj) {
     reader_node_t *tmp = reader_read_string(tmp_str);
     classifier_run(tmp);
     
-    return CAR(reader_to_data(tmp, false));
+    return CAR(reader_to_data(tmp, false, true));
 }
 
 static data_t *possible_symbol_to_data(data_t *obj) {
@@ -385,7 +385,7 @@ eval_gather_gc(void (*add_data_cb)(data_t *),
     add_data_cb(proc);
     add_env_cb(env);
     //add_data_cb(code_pointer);
-    add_data_cb(top_code_pointer);
+//    add_data_cb(top_code_pointer);
     //add_data_cb(last_arg_pointer); /* may not need this */
     
     /* add stack elements */
@@ -429,7 +429,7 @@ eval_gather_gc(void (*add_data_cb)(data_t *),
     add_data_cb(proc);
     add_env_cb(env);
     //add_data_cb(code_pointer);
-    add_data_cb(top_code_pointer);
+//    add_data_cb(top_code_pointer);
     //add_data_cb(last_arg_pointer);
     
     /* add stack elements */
@@ -600,6 +600,111 @@ void eval_set_error(data_t *error)
         error_value = error;
 }
 
+static void rec_set_new_pointers_data(data_t *arg,
+                                      environment_t **old, 
+                                      environment_t **new,
+                                      int num);
+
+static void rec_set_new_pointers_env(environment_t **envp,
+                                     environment_t **old, 
+                                     environment_t **new,
+                                     int num)
+{
+    if(!envp)
+        return;
+
+    environment_t *env = *envp;
+
+    if(!env)
+        return;
+
+//    printf("looking for environment matching %x\n", env);
+
+    /* actually do the switch */
+    int i;
+    for(i=0; i<num; i++)
+        if(old[i] == env) {
+            *envp = new[i];
+            return;
+        }
+
+    /* we should recursively go through the unknown environment */
+    for(i=0; i<env->bindings->capacity; ++i) {
+        hashtable_entry_t *entry = env->bindings->elements[i];
+        
+        if(entry->key) {
+            data_t *slot = (data_t *)entry->value;
+            rec_set_new_pointers_data(slot, old, new, num);
+        }
+    }
+
+}                                      
+
+static void rec_set_new_pointers_data(data_t *arg,
+                                      environment_t **old, 
+                                      environment_t **new,
+                                      int num)
+{
+    if(!arg)
+        return;
+
+    data_t *car = NULL;
+    data_t *cdr = NULL;
+    
+    switch(arg->type) {
+    case DT_PROCEDURE:
+        
+        rec_set_new_pointers_env(&arg->data.procedure.env, old, new, num);
+    case DT_MACRO:
+        car = arg->data.procedure.args;
+        cdr = arg->data.procedure.code;
+        break;
+    case DT_PAIR:
+        car = CAR(arg);
+        cdr = CDR(arg);
+        break;
+    default:
+        break;
+    }
+    
+    if(car)
+        rec_set_new_pointers_data(car, old, new, num);
+    if(cdr)
+        rec_set_new_pointers_data(cdr, old, new, num);
+}
+
+void eval_set_new_pointers(environment_t **old_envs, 
+                           environment_t **new_envs,
+                           int num)
+{
+    /* set registers */
+    rec_set_new_pointers_data(val, old_envs, new_envs, num);
+    rec_set_new_pointers_data(exp, old_envs, new_envs, num);
+    rec_set_new_pointers_data(argl, old_envs, new_envs, num);
+    rec_set_new_pointers_data(unev, old_envs, new_envs, num);
+    rec_set_new_pointers_data(proc, old_envs, new_envs, num);
+//    rec_set_new_pointers_data(code_pointer, old_envs, new_envs, num);
+//    rec_set_new_pointers_data(top_code_pointer, old_envs, new_envs, num);
+//    rec_set_new_pointers_data(last_arg_pointer, old_envs, new_envs, num);
+
+    rec_set_new_pointers_env(&env, old_envs, new_envs, num);
+
+    /* set stack elements */
+    int i;
+    for(i=0; i<stack.next; i++) {
+        switch(stack.stack_type[i]) {
+        case ST_DATA:
+            rec_set_new_pointers_data(stack.data[i], old_envs, new_envs, num);
+            break;
+        case ST_ENV:
+            rec_set_new_pointers_env(&stack.data[i], old_envs, new_envs, num);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
 /*
 void eval_set_register(RegType type, void *setting)
 {
@@ -643,11 +748,8 @@ void eval_set_register(RegType type, void *setting)
 
 int eval_init()
 {
-    int max_num_environments = 256; /* get this from config */
-    int max_num_blocks = 5000; /* get this from config */
-
-    max_num_environments = (int)eng_get_prop("max_num_environments");
-    max_num_blocks = (int)eng_get_prop("max_num_blocks");
+    int max_num_environments = (int)eng_get_prop("max_num_environments");
+    int max_num_blocks = (int)eng_get_prop("max_num_blocks");
 
     stack.next = 0;
     cont = JUMP_CODE;
@@ -716,7 +818,7 @@ EVAL_ENTRY:
     if(! code)
         goto EXIT_EVAL;
 
-    code_pointer = reader_to_data(code, false);
+    code_pointer = reader_to_data(code, false, false);
     
 #ifdef DEBUG
     pretty_print(code_pointer);
@@ -1201,6 +1303,8 @@ JUMP_TO_CONTINUE:
     }
 
 EXIT_EVAL:
+
+    free(top_code_pointer);
 
     val_tmp = val;
 

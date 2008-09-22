@@ -94,8 +94,21 @@ static bool consume_string(reader_node_t *node)
 
         node->token_type = SRT_STRING;
         node->data = malloc(sizeof(*stream) * stream_len);
-        memcpy(node->data, stream, stream_len);
 
+        /* instead of doing a memcpy, have to skip over escaped
+         * chars */
+        char *dest = node->data;
+        int src_idx = 0;
+        int dest_idx = 0;
+        while(src_idx < stream_len) {
+            if(stream[src_idx] == '\\') {
+                src_idx++;
+                continue;
+            }
+            
+            dest[dest_idx++] = stream[src_idx++];            
+        }
+        
         return true;
     }
 

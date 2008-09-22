@@ -11,22 +11,19 @@ using namespace std;
 static environment_t *main_env;
 static vector<environment_t*> stored_envs;
 static vector<data_t*> data_objs;
-static map<environment_t *, environment_t *> visited;
+static map<environment_t *, environment_t *> store_visited;
+static map<environment_t *, environment_t *> restore_visited;
 
 static void destroy_objs() {
-    env_destroy(main_env);
+    env_destroy_no_gc(main_env);
     for(unsigned int i=0; i<data_objs.size(); i++)
-        data_destroy(data_objs[i]);
+        free(data_objs[i]);
     data_objs.clear();
     for(unsigned int i=0; i<stored_envs.size(); i++)
         env_destroy_no_gc(stored_envs[i]);    
     stored_envs.clear();
 
-//    main_env = NULL;
-}
-
-static void clear_visited() {
-    visited.clear();
+    main_env = NULL;
 }
 
 static data_t *data_store_recursive(data_t *data);
@@ -37,7 +34,7 @@ static environment_t *env_store_recursive(environment_t *env) {
     unsigned int i;
     hashtable_entry_t *entry;
 
-    visited[env] = new_env;
+    store_visited[env] = new_env;
 
     for(i=0; i<env->bindings->capacity; ++i) {
         entry = env->bindings->elements[i];
@@ -58,13 +55,19 @@ static environment_t *env_store_recursive(environment_t *env) {
     return new_env;
 }
 
-static environment_t *env_restore_recursive(environment_t *env) {
+static environment_t *env_restore_recursive(environment_t *env, bool global_env) {
     environment_t *new_env = env_create(env->parent);
+    
+    if(global_env)
+        GlobalEnv = new_env;
+    
     unsigned int i;
     hashtable_entry_t *entry;
 
-    visited[env] = new_env;
+    restore_visited[env] = new_env;
+//    printf(">>mapping new environment %x to old environment %x\n", env, new_env);
 
+    
     for(i=0; i<env->bindings->capacity; ++i) {
         entry = env->bindings->elements[i];
         
@@ -111,12 +114,11 @@ static data_t *data_store_recursive(data_t *data) {
         break;
     }
     case DT_PROCEDURE:
-        if(visited.count((environment_t*)data->data.procedure.env) == 0) {
-            printf("here\n");
+        if(store_visited.count((environment_t*)data->data.procedure.env) == 0) {
             env = env_store_recursive((environment_t*)data->data.procedure.env);
             stored_envs.push_back(env);
         } else {
-            env = visited[(environment_t*)data->data.procedure.env];
+            env = store_visited[(environment_t*)data->data.procedure.env];
         }
         new_data->data.procedure.env = env;        
     case DT_MACRO:
@@ -160,10 +162,13 @@ static data_t *data_restore_recursive(data_t *data) {
         new_data = data_create(data->filename, data->line_num, data->type, data->data.text, NULL, NULL);
         break;
     case DT_PROCEDURE: 
-        if(visited.count((environment_t*)data->data.procedure.env) == 0) {
-            env = env_restore_recursive((environment_t*)data->data.procedure.env);
+//        printf("checking for %x\n", data->data.procedure.env);
+        if(restore_visited.count((environment_t*)data->data.procedure.env) == 0) {
+            env = env_restore_recursive((environment_t*)data->data.procedure.env, false);
+//            printf("  not found, creating and setting mapping to %x\n", env);
         } else {
-            env = visited[(environment_t*)data->data.procedure.env];
+            env = restore_visited[(environment_t*)data->data.procedure.env];
+//            printf("  found, setting mapping to %x\n", env);
         }
         car = data_restore_recursive(data->data.procedure.args);
         cdr = data_restore_recursive(data->data.procedure.code);
@@ -203,7 +208,8 @@ FOREIGN_FUNCTION(env_restore_plugin_save) {
     if(main_env)
         destroy_objs();
 
-    clear_visited();
+    store_visited.clear();
+
     main_env = env_store_recursive(GlobalEnv);
 
     FF_RET_TRUE;
@@ -217,11 +223,35 @@ FOREIGN_FUNCTION(env_restore_plugin_restore) {
         FF_RET_FALSE;
 
     // remove old environment
-    env_destroy(GlobalEnv);
+//    env_destroy(GlobalEnv);
     
     // restore old environment
-    clear_visited();
-    GlobalEnv = env_restore_recursive(main_env);
+    restore_visited.clear();
+
+//    printf("global env: %x\n", GlobalEnv);
+
+    env_restore_recursive(main_env, true);
+
+//    printf("global env: %x\n", GlobalEnv);
+
+    environment_t **new_envs = (environment_t **)malloc(sizeof(*new_envs) * store_visited.size());
+    environment_t **old_envs = (environment_t **)malloc(sizeof(*old_envs) * store_visited.size());
+
+    int i = 0;
+    map<environment_t *, environment_t *>::iterator iter = store_visited.begin();
+    for(; iter != store_visited.end(); iter++, i++) {
+        old_envs[i] = iter->first;
+        new_envs[i] = restore_visited[iter->second];
+
+//        printf("mapping: %x to %x\n", old_envs[i], new_envs[i]);
+    }
+
+//    printf("total of %d entries\n", i);
+
+    eval_set_new_pointers(old_envs, new_envs, i);
+
+    free(new_envs);
+    free(old_envs);
 
     // set environment in eval
 //    eval_set_register(RT_ENV, GlobalEnv);

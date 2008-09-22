@@ -83,7 +83,7 @@ bool util_mbs_eq(char *arg1, char *arg2)
     return false;
 }
 
-DLL_INFO data_t *reader_to_data(reader_node_t *code, bool in_pair) 
+DLL_INFO data_t *reader_to_data(reader_node_t *code, bool in_pair, bool is_gc)
 {
     int fn_index = code->filename_index;
     int line_num = code->line_num;
@@ -95,9 +95,9 @@ DLL_INFO data_t *reader_to_data(reader_node_t *code, bool in_pair)
 
     switch(code->token_type) {
     case SRT_PAIR:
-        arg1 = reader_to_data(code->child, true);
+        arg1 = reader_to_data(code->child, true, is_gc);
         if(code->next)
-            arg2 = reader_to_data(code->next, true);
+            arg2 = reader_to_data(code->next, true, is_gc);
         else
             arg2 = DataNIL;
         type = DT_PAIR;
@@ -137,21 +137,32 @@ DLL_INFO data_t *reader_to_data(reader_node_t *code, bool in_pair)
     if(type == DT_VARIABLE && util_wcs_eq(arg1, L")"))
         return DataNIL;
 
-    result = data_create(fn_index, line_num, type, arg1, arg2, arg3);
+    if(is_gc)
+        result = data_create(fn_index, line_num, type, arg1, arg2, arg3);
+    else
+        result = data_create_no_gc(fn_index, line_num, type, arg1, arg2, arg3);
 
     if(result->type != DT_PAIR && in_pair) {
         data_t *data_next;
         if(code->next)
-            data_next = reader_to_data(code->next, true);
+            data_next = reader_to_data(code->next, true, is_gc);
         else
             data_next = DataNIL;
         
-        result = data_create(result->filename,
-                             result->line_num,
-                             DT_PAIR,
-                             result,
-                             data_next,
-                             result);
+        if(is_gc)
+            result = data_create(result->filename,
+                                 result->line_num,
+                                 DT_PAIR,
+                                 result,
+                                 data_next,
+                                 result);
+        else
+            result = data_create_no_gc(result->filename,
+                                       result->line_num,
+                                       DT_PAIR,
+                                       result,
+                                       data_next,
+                                       result);
         
     }
 

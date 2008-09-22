@@ -36,4 +36,6 @@ void eval_gather_gc(void (*add_data_cb)(data_t *),
 
 data_t *eval(reader_node_t *code);
 
+DLL_INFO void eval_set_new_pointers(environment_t **old_envs, environment_t **new_envs, int num);
+
 #endif	/* __EVAL_H__ */

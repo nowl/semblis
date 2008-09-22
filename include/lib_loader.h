@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "hashtable.h"
+#include "windll.h"
 
 #ifdef WIN32
 #include <Windows.h>
@@ -16,7 +17,7 @@
 # define LIBRARY_HANDLE void*
 #endif
 
-extern hashtable_t *reg_table;  /* declared in core_prims.c */
+DLL_INFO hashtable_t *reg_table;  /* declared in core_prims.c */
 
 typedef struct {
     char *_mod_name;

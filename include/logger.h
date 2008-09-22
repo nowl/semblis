@@ -2,7 +2,7 @@
 #define __LOGGER_H__
 
 #include "windll.h"
-#include "stdbool.h"
+#include "types.h"
 
 typedef enum {
     LL_DEBUG = 0,

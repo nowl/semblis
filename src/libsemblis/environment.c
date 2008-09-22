@@ -284,4 +284,3 @@ int env_get_size(environment_t *env)
 
     return env->bindings->length;
 }
-

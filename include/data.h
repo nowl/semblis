@@ -7,14 +7,14 @@
 typedef struct data_type {
     union {
         String text;
-        
+
         double number;
-        
+
         struct {
             struct data_type *car;
             struct data_type *cdr;
         } pair;
-        
+
         struct {
             struct data_type *args;
             struct data_type *code;
@@ -25,7 +25,7 @@ typedef struct data_type {
     } data;
 
     short filename;
-    short line_num;    
+    short line_num;
 
     uint8 type;		/* data type */
     bool  marked; 		/* marked for GC? */
@@ -62,7 +62,14 @@ DLL_INFO data_t *data_create(int filename_index,
                              void *arg1,
                              void *arg2,
                              void *arg3);
+DLL_INFO data_t *data_create_no_gc(int filename_index,
+                                   int line_num,
+                                   uint8 type,
+                                   void *arg1,
+                                   void *arg2,
+                                   void *arg3);
 DLL_INFO void data_destroy(data_t *data);
+DLL_INFO void data_destroy_no_gc(data_t *data);
 
 DLL_INFO DataType data_get_type(data_t *data);
 DLL_INFO void data_set_type(data_t *data, DataType type);
@@ -112,6 +119,6 @@ DLL_INFO int data_get_line_num(data_t *data);
 void data_cleanup(void);
 
 /* global data_t objects */
-extern data_t *DataNIL, *DataTrue;
+DLL_INFO extern data_t *DataNIL, *DataTrue;
 
 #endif	/* __DATA_H__ */

@@ -8,21 +8,13 @@
 #else
 #include <windows.h>
 #define snprintf _snprintf
-#endif
-
-#ifndef __cplusplus
-# ifndef bool
-typedef char bool;
-# endif
-
-# ifndef false
+# ifndef __cplusplus
+    typedef char bool;
 #  define false 0
-# endif
-
-# ifndef true
 #  define true 1
-# endif
-#endif
+# endif /* __cplusplus */
+#endif /* WIN32 */
+
 
 #include "hashtable.h"
 

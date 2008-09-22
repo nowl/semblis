@@ -28,6 +28,8 @@ int main(int argc, char* argv[])
     /* evaluating */
     result = eng_eval(root);
 
+//    pretty_print_env(GlobalEnv);
+
     /* display result */
     printf(" -->\n");
     pretty_print(result);

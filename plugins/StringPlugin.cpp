@@ -13,7 +13,7 @@ FOREIGN_FUNCTION(string_plugin_add) {
     result_string[0] = 0;
 
     MIN_ARITY(2);
-    
+
     while(! IS_NIL(args)) {
         data_t *arg = CAR(args);
 
@@ -26,18 +26,31 @@ FOREIGN_FUNCTION(string_plugin_add) {
             String new_string_tmp = arg->data.text;
             wcscpy(new_string, new_string_tmp);
         } else {
+#ifdef WIN32
+            swprintf(new_string,
+                     L"%f",
+                     arg->data.number);
+#else
             swprintf(new_string,
                      MAX_STRING_LEN,
                      L"%f",
                      arg->data.number);
+#endif /* WIN32 */
         }
         wcscpy(tmp_string, result_string);
-        
+
+#ifdef WIN32
+        swprintf(result_string,
+                 L"%ls%ls",
+                 tmp_string,
+                 new_string);
+#else
         swprintf(result_string,
                  MAX_STRING_LEN,
                  L"%ls%ls",
                  tmp_string,
                  new_string);
+#endif /* WIN32 */
 
         args = CDR(args);
     }

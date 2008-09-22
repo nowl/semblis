@@ -10,6 +10,8 @@ data_t **BlockList;
 int MaxNumBlocks;
 int BlocksInUse;
 
+
+
 void data_init(int max_num_blocks)
 {
     int i;
@@ -17,7 +19,7 @@ void data_init(int max_num_blocks)
     MaxNumBlocks = max_num_blocks;
 
     BlockList = malloc(sizeof(*BlockList) * MaxNumBlocks);
-   
+
     for(i=0; i<MaxNumBlocks; i++)
         BlockList[i] = NULL;
 
@@ -36,7 +38,7 @@ static bool insert_block(data_t *new_data) {
         /* hit max, trigger garbage collection */
 //        gc_run_with_block(new_data);
         gc_run();
-        
+
         if(BlocksInUse == MaxNumBlocks) {
             printf("max number of blocks hit\n");
             exit(1);
@@ -60,7 +62,7 @@ static bool insert_block(data_t *new_data) {
     return true;
 }
 
-data_t *data_create(int filename_index,
+static data_t *create(int filename_index,
                     int line_num,
                     uint8 type,
                     void *arg1,
@@ -107,6 +109,20 @@ data_t *data_create(int filename_index,
         break;
     }
 
+    return new_data;
+}
+
+data_t *data_create(int filename_index,
+                    int line_num,
+                    uint8 type,
+                    void *arg1,
+                    void *arg2,
+                    void *arg3)
+{
+    data_t *new_data = create(filename_index,
+                              line_num,
+                              type,
+                              arg1, arg2, arg3);
     insert_block(new_data);
 
     if(IS_DATAERROR(new_data))
@@ -115,14 +131,42 @@ data_t *data_create(int filename_index,
     return new_data;
 }
 
-void data_destroy(data_t *data)
+data_t *data_create_no_gc(int filename_index,
+                          int line_num,
+                          uint8 type,
+                          void *arg1,
+                          void *arg2,
+                          void *arg3)
+{
+    data_t *new_data = create(filename_index,
+                              line_num,
+                              type,
+                              arg1, arg2, arg3);
+
+    if(IS_DATAERROR(new_data))
+        eval_set_error(new_data);
+
+    return new_data;
+}
+
+static void destroy(data_t *data)
 {
     if(IS_STRING_TYPE(data))
         free(data->data.text);
 
     free(data);
+}
+
+void data_destroy(data_t *data)
+{
+    destroy(data);
 
     --BlocksInUse;
+}
+
+void data_destroy_no_gc(data_t *data)
+{
+    destroy(data);
 }
 
 void data_set_marked(data_t *data, bool mark)
@@ -146,12 +190,21 @@ void data_set_marked(data_t *data, bool mark)
 void data_set_marked_recursive(data_t *data, bool mark)
 {
     if(data->type != DT_NIL) {
-        if(IS_PAIR(data)) {
+        switch(data->type) {
+        case DT_PAIR:
             if(CDR(data)->marked != mark)
                 data_set_marked_recursive(CDR(data), mark);
             if(CAR(data)->marked != mark)
                 data_set_marked_recursive(CAR(data), mark);
-        } else if(IS_PROCEDURE(data) || IS_MACRO(data)) {
+            break;
+        case DT_PROCEDURE:
+        {
+            environment_t *env = data->data.procedure.env;
+            if(env && env->marked != mark)
+                env_set_marked(env, mark);
+        }
+        case DT_MACRO:
+        {
             data_t *tmp;
 
             tmp = data->data.procedure.args;
@@ -161,10 +214,11 @@ void data_set_marked_recursive(data_t *data, bool mark)
             tmp = data->data.procedure.code;
             if(tmp->marked != mark)
                 data_set_marked_recursive(tmp, mark);
-            
-            environment_t *env = data->data.procedure.env;
-            if(env && env->marked != mark)
-                env_set_marked(env, mark);
+
+            break;
+        }
+        default:
+            break;
         }
     }
 

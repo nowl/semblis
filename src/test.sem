@@ -1,2 +1,36 @@
-(define st "(\"hello world\")")
-(display st)
+(import "baseFuncLib.sem")
+
+
+
+(define body-mesh-num 0)
+(define body-text-num 0)
+(define hair-mesh-num 0)
+(define hair-text-num 0)
+
+(display body-mesh-num)(newline) 
+(display body-text-num)(newline)
+(display hair-mesh-num)(newline)
+(display hair-text-num)(newline)
+
+
+(define (func1)
+	(let ()
+	  (set body-mesh-num 0)
+	  (set body-text-num 0)
+	  (set hair-mesh-num 0)
+	  (set hair-text-num 0))
+	(let ()
+	  ; they come out in reverse order
+	  (set hair-text-num 4)
+	  (set hair-mesh-num 9)
+	  (set body-text-num 0)
+	  (set body-mesh-num 2)))
+
+(func1)
+
+(display "----------------------------")(newline)
+(display body-mesh-num) (newline) 
+(display body-text-num) (newline)
+(display hair-mesh-num) (newline)
+(display hair-text-num) (newline)
+

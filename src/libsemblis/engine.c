@@ -28,8 +28,8 @@ static Config *config_main;
 DLL_INFO bool semblis_init(void)
 {
     /* engine vars */
-    max_num_blocks = 1000;
-    max_num_environments = 50;
+    max_num_blocks = 50000;
+    max_num_environments = 2048;
     show_engine_stats = true;
     show_garbage_collection_stats = false;
     output_std_func = output_err_func = console_output;
@@ -161,11 +161,11 @@ static void process_core_property(Property *prop)
 
     if(strcmp(key, "BlocksUntilGarbageCollection") == 0) {
         int num_blocks = atoi(prop->value);
-        num_blocks = (num_blocks < 500) ? 500 : num_blocks;
+        num_blocks = (num_blocks < 50000) ? 50000 : num_blocks;
         max_num_blocks = num_blocks;
     } else if(strcmp(key, "EnvironmentsUntilGarbageCollection") == 0) {
         int num_envs = atoi(prop->value);
-        num_envs = (num_envs < 100) ? 100 : num_envs;
+        num_envs = (num_envs < 2048) ? 2048 : num_envs;
         max_num_environments = num_envs;
     } else if(strcmp(key, "ShowEngineStats") == 0) {
         show_engine_stats = true_accept(prop->value);

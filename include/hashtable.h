@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 
+#include "windll.h"
 #include "types.h"
 
 typedef unsigned long (*HashFunc)(void *);
@@ -12,7 +13,7 @@ typedef void* (*CopyFunc)(void *dest, void *src, size_t size);
 
 typedef struct {
     void *key;
-    void *value;    
+    void *value;
 } hashtable_entry_t;
 
 typedef struct {
@@ -22,7 +23,7 @@ typedef struct {
     CopyFunc key_copy_func;
     SizeFunc val_size_func;
     CopyFunc val_copy_func;
-    
+
     unsigned int capacity;
     unsigned int length;
 
@@ -54,7 +55,7 @@ hashtable_t     *hashtable_create(int size,
 #define HT_COPY_KEY           0x01
 #define HT_COPY_VALUE         0x02
 
-bool		 hashtable_put(hashtable_t **hashtable_ptr,
+DLL_INFO bool		 hashtable_put(hashtable_t **hashtable_ptr,
 			       void *key,
 			       void *value);
 

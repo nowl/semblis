@@ -6,11 +6,13 @@
 #include "eval.h"
 #include "gc.h"
 #include "semblis.h"
+#include "logger.h"
 
 /* This can be absolutely turned off for speed, so the checks for
  * printing won't even happen at runtime. */
 #define ENABLE_GC_STATS
 //#define DEBUG_BLOCKLIST
+//#define LOG_TO_FILE
 
 static void mark_data(data_t *data) {
     if(data)
@@ -34,6 +36,15 @@ void gc_run(void)
     }
 #endif
 
+#ifdef LOG_TO_FILE
+   char log_output[4096];
+   logger_log("gc", LL_DEBUG, "---------- before garbage collection ----------");
+   snprintf(log_output, 4096, "blocks in use: %d", BlocksInUse);
+   logger_log("gc", LL_DEBUG, log_output);
+   snprintf(log_output, 4096, "environments in use: %d", EnvironmentsInUse);
+   logger_log("gc", LL_DEBUG, log_output);
+#endif
+   
 #ifdef DEBUG_BLOCKLIST
     for(i=0; i<MaxNumBlocks; i++)
         if(BlockList[i]) {
@@ -79,6 +90,15 @@ void gc_run(void)
         OUTPUT_REG("environments in use: %d\n", EnvironmentsInUse);
         OUTPUT_REG("----------------------------------------------\n");
     }
+#endif
+   
+#ifdef LOG_TO_FILE
+   log_output[4096];
+   logger_log("gc", LL_DEBUG, "---------- after garbage collection ----------");
+   snprintf(log_output, 4096, "blocks in use: %d", BlocksInUse);
+   logger_log("gc", LL_DEBUG, log_output);
+   snprintf(log_output, 4096, "environments in use: %d", EnvironmentsInUse);
+   logger_log("gc", LL_DEBUG, log_output);
 #endif
 
 #ifdef DEBUG_BLOCKLIST
