@@ -38,4 +38,7 @@ data_t *eval(reader_node_t *code);
 
 DLL_INFO void eval_set_new_pointers(environment_t **old_envs, environment_t **new_envs, int num);
 
+DLL_INFO short eval_get_current_val_filename(void);
+DLL_INFO short eval_get_current_val_line_num(void);
+
 #endif	/* __EVAL_H__ */

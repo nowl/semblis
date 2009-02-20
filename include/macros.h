@@ -28,6 +28,8 @@ extern OutputFunc output_std_func, output_err_func;
     ( (x)->type == DT_NUMBER )
 #define IS_SYMBOL(x)                            \
     ( (x)->type == DT_SYMBOL )
+#define IS_STRING(x)                            \
+    ( (x)->type == DT_STRING )
 #define IS_DATAERROR(x)                         \
     ( (x)->type == DT_DATAERROR )
 #define IS_STRING_TYPE(x)                       \

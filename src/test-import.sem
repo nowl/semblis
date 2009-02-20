@@ -1,5 +1,9 @@
 ; mode: -*- scheme -*-
-(import "while-macro.sem")
+
+(define (do-import im)
+  (import im))
+
+(do-import "while-macro.sem")
 
 (define (dan x)
   (display x)

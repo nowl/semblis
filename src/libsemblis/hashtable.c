@@ -27,7 +27,7 @@ static long
 jenkins_one_at_a_time_hash(unsigned char *key,
                            size_t key_len)
 {
-    long hash = 0;
+    unsigned long hash = 0;
     size_t i;
  
     for (i = 0; i < key_len; i++) {
@@ -45,7 +45,7 @@ jenkins_one_at_a_time_hash(unsigned char *key,
 unsigned long
 hashtable_jenkins_hash_wchar(void* key)
 {
-    long hash = 0;
+    unsigned long hash = 0;
     wchar_t *str = key;
     wchar_t c;
 
@@ -66,7 +66,7 @@ hashtable_jenkins_hash_wchar(void* key)
 unsigned long
 hashtable_jenkins_hash_char(void* key)
 {
-    long hash = 0;
+    unsigned long hash = 0;
     char *str = key;
     char c;
 

@@ -1,7 +1,3 @@
-(import "baseFuncLib.sem")
-
-
-
 (define body-mesh-num 0)
 (define body-text-num 0)
 (define hair-mesh-num 0)

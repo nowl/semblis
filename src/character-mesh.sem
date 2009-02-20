@@ -326,7 +326,4 @@
 (display-strings (cycle-up-hair-texture))
 
 
-(define (rest)
-		(env:restore))
-
-(rest)
+(env:restore)

@@ -68,11 +68,15 @@ static data_t *display_func_helper(data_t *arg)
 PRIM_FUNCTION(display_func) {
     data_t *arg;
 
-    if(IS_PAIR(args)) {
+
+    if(IS_PAIR(args)) 
+	{
         arg = CAR(args);
         args = CDR(args);
     } else
+	{
         arg = args;
+	}
 
     return display_func_helper(arg);
 }

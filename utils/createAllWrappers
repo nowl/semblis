@@ -1,18 +1,25 @@
 #!/bin/sh
 
-./convWrapper.py ../../webMain/MoviePlayer.h
-./convWrapper.py ../../webMain/iaSystem.h
-./convWrapper.py ../../webMain/mouseCollision.h
-./convWrapper.py ../../webMain/semAnimation.h
-./convWrapper.py ../../webMain/semCallback.h
-./convWrapper.py ../../webMain/semCamera.h
-./convWrapper.py ../../webMain/semCookies.h
-./convWrapper.py ../../webMain/semCreation.h
-./convWrapper.py ../../webMain/semDownload.h
-./convWrapper.py ../../webMain/semGuiCreation.h
-./convWrapper.py ../../webMain/semGuiOperation.h
-./convWrapper.py ../../webMain/semLight.h
-./convWrapper.py ../../webMain/semOperation.h
-./convWrapper.py ../../webMain/semSignals.h
-./convWrapper.py ../../webMain/semPmgr.h
-./convWrapper.py ../../soundLibrary/soundDevice.h
+echo iaSystem.h       	&	./convWrapper.py ../../webMain/iaSystem.h
+echo mouseCollision.h 	&	./convWrapper.py ../../webMain/mouseCollision.h
+echo MoviePlayer.h    	&	./convWrapper.py ../../webMain/MoviePlayer.h
+echo semAnimation.h   	&	./convWrapper.py ../../webMain/semAnimation.h
+echo semCallback.h    	&	./convWrapper.py ../../webMain/semCallback.h
+echo semCamera.h      	&	./convWrapper.py ../../webMain/semCamera.h
+echo semCookies.h     	&	./convWrapper.py ../../webMain/semCookies.h
+echo semCreation.h    	&	./convWrapper.py ../../webMain/semCreation.h
+echo semDownload.h    	&	./convWrapper.py ../../webMain/semDownload.h
+echo semGuiCreation.h 	&	./convWrapper.py ../../webMain/semGuiCreation.h
+echo semGuiOperation.h	&	./convWrapper.py ../../webMain/semGuiOperation.h
+echo semLight.h       	&	./convWrapper.py ../../webMain/semLight.h
+echo semMath.h        	&	./convWrapper.py ../../webMain/semMath.h
+echo semOperation.h   	&	./convWrapper.py ../../webMain/semOperation.h
+echo semPmgr.h        	&	./convWrapper.py ../../webMain/semPmgr.h
+echo semSignals.h     	&	./convWrapper.py ../../webMain/semSignals.h
+
+mv *cpp ../../webMain
+
+echo semSignals.h		&	./convWrapper.py ../../Iserver/semSignals.h
+echo server.h    		&	./convWrapper.py ../../Iserver/server.h
+
+mv *cpp ../../Iserver

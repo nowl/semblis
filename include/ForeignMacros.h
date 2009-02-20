@@ -31,14 +31,28 @@
 
 #define FF_RET_ERROR(err)    RETURN_ERROR(arg, ( err ));
 #define FF_RET_NUMBER(x)     RETURN_NUMBER(arg, ( x ));
+#define FF_RET_REAL(x)       { \
+							     double tmp = (double)x; \
+								 RETURN_NUMBER(arg, ( tmp )); \
+							 }
 #define FF_RET_STRING(x)     RETURN_STRING(arg, ( x ));
 #define FF_RET_TRUE          return DataTrue;
 #define FF_RET_FALSE         return DataNIL;
 
-#define FF_CREATE_PAIR	       	data_create(-1, 0, DT_PAIR, DataNIL, DataNIL, NULL)
-#define FF_CREATE_NUMBER(x)    	data_create(-1, 0, DT_NUMBER, (void*) (x), NULL, NULL)
-#define FF_CREATE_STRING(x)    	data_create(-1, 0, DT_STRING, (x), NULL, NULL)
-#define FF_CREATE_ERROR(x)	data_create(-1, 0, DT_DATAERROR, (void*) (x), NULL, NULL)
-#define FF_CREATE_POINTER(x)   	data_create(-1, 0, DT_POINTER, (x), NULL, NULL)
+#define FF_CREATE_PAIR	       	data_create(eval_get_current_val_filename(),\
+                                            eval_get_current_val_line_num(),\
+                                            DT_PAIR, DataNIL, DataNIL, NULL)
+#define FF_CREATE_NUMBER(x)    	data_create(eval_get_current_val_filename(),\
+                                            eval_get_current_val_line_num(),\
+                                            DT_NUMBER, (void*) (x), NULL, NULL)
+#define FF_CREATE_STRING(x)    	data_create(eval_get_current_val_filename(),\
+                                            eval_get_current_val_line_num(),\
+                                            DT_STRING, (x), NULL, NULL)
+#define FF_CREATE_ERROR(x)	    data_create(eval_get_current_val_filename(),\
+                                            eval_get_current_val_line_num(),\
+                                            DT_DATAERROR, (void*) (x), NULL, NULL)
+#define FF_CREATE_POINTER(x)   	data_create(eval_get_current_val_filename(),\
+                                            eval_get_current_val_line_num(),\
+                                            DT_POINTER, (x), NULL, NULL)
 
 #endif	// __FOREIGN_MACROS_H__

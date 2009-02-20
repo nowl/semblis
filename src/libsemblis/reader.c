@@ -47,26 +47,18 @@ static int find_filename_index_by_name(char *filename)
 {    
     int i=0;
     int filename_len;
-    char mod_filename[33];
-
-    /* limit filenames and strings to 32 chars for debugging */
-    if(strlen(filename) > 32)
-        memcpy(mod_filename, filename, 32);
-    else
-        strcpy(mod_filename, filename);
-    mod_filename[32] = 0;
 
     for(i=0; i<cur_filename_size; i++)
-        if(strcmp(mod_filename, cur_filename[i]) == 0)
+        if(strcmp(filename, cur_filename[i]) == 0)
             return i;
 
     cur_filename = util_grow_buffer_to_size(cur_filename,
                                             &cur_filename_cap,
                                             cur_filename_size+1,
                                             sizeof(*cur_filename));
-    filename_len = strlen(mod_filename) + 1;
-    cur_filename[cur_filename_size] = malloc(sizeof(*mod_filename) * filename_len);
-    memcpy(cur_filename[cur_filename_size++], mod_filename, filename_len);
+    filename_len = strlen(filename) + 1;
+    cur_filename[cur_filename_size] = malloc(sizeof(*filename) * filename_len);
+    memcpy(cur_filename[cur_filename_size++], filename, filename_len);
 
     return cur_filename_size-1;
 }

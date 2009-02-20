@@ -17,7 +17,11 @@
 # define LIBRARY_HANDLE void*
 #endif
 
+#ifdef WIN32
 DLL_INFO hashtable_t *reg_table;  /* declared in core_prims.c */
+#else
+DLL_INFO extern hashtable_t *reg_table;  /* declared in core_prims.c */
+#endif
 
 typedef struct {
     char *_mod_name;

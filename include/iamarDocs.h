@@ -1,6 +1,217 @@
 #ifndef __IAMARDOCS_H__
 #define __IAMARDOCS_H__
 
+
+
+
+
+
+
+//doc:start
+//game semblis string
+//(str:trim text) 
+//
+//Brief Description: removes all the white space from text
+//
+//domain : semblis
+//
+//explained: 
+//	if text has white space on both sides, they will be trimed
+//
+//
+//  Argument    type        Definition
+//  ---------------------------------------------------------------
+//  text		string      This is the text to be trimed
+//
+//
+//Return Type: string
+//
+//Returns:
+//  This function returns a trimed string
+//	
+//
+//example:
+//	(display (str:trim "     this  "))
+//
+//		
+//doc:end
+
+
+
+
+
+
+
+
+
+
+//doc:start
+//game semblis string
+//(str:find text searchStr) 
+//
+//Brief Description: finds if a substring is inside text
+//
+//domain : semblis
+//
+//explained: 
+//	We can use this function to find a pattern inside a string. 
+//	It will take the first string and try to find the second string within 
+//	it. In case of our example, it is going to attempt to find the word is 
+//	inside the sentence this is a test. If it doesn't find the word 
+//	we are looking for it will return the value of -1. If it does find 
+//	the word, it will then return the index where it was first found. 
+//	In our case, it would return 2, because is is inside the first 
+//	word this. If you were to count it up from 0, 1, 2, the word is is 
+//	position at the index of 2.
+//
+//
+//  Argument    type        Definition
+//  ---------------------------------------------------------------
+//  text		string      This is the text to be split
+//	searchStr	string		This is used to do the search
+//
+//
+//Return Type: Number
+//
+//Returns:
+//  This function returns a number index where the substring is found, but
+//  if nothing is found, it will return the value of -1.
+//	
+//
+//example:
+//	(display (str:find "this is a test"))
+//
+//		
+//doc:end
+
+
+
+
+
+
+
+
+
+
+
+
+
+//doc:start
+//game semblis string
+//(str:split text splitChar) 
+//
+//Brief Description: splits a string by a character
+//
+//domain : semblis
+//
+//explained: 
+//	Splits a string by a single character, normally the space, 
+//	period, or comma.
+//
+//
+//  Argument    type        Definition
+//  ---------------------------------------------------------------
+//  text		string      This is the text to be split
+//	splitChar	string		This is used to do the splitting
+//
+//
+//Return Type: list
+//
+//Returns:
+//  This function returns a list with the characters split
+//	
+//
+//example:
+//	(display (str:split "this,is,a,test" ","))
+//
+//	This function will split the string into a list of (this, is, a, test)
+//		
+//doc:end
+
+
+
+
+
+
+
+
+//doc:start
+//game semblis string
+//(str:num text) 
+//
+//Brief Description: converts a string into a number
+//
+//domain : semblis
+//
+//explained: 
+//	converts a string into a number, if the string is
+//	a number in ascii format
+//
+//
+//  Argument    type        Definition
+//  ---------------------------------------------------------------
+//  text		string      This is the text to be converted
+//
+//
+//Return Type: number
+//
+//Returns:
+//  This function returns the number represented by the string
+//	
+//
+//example:
+//  (display (str:num "345"))
+//		
+//doc:end
+
+
+
+
+
+
+
+
+
+
+//doc:start
+//game semblis string
+//(str:+ text1 text2 ...)
+//
+//Brief Description: adds all the rest strings together
+//
+//domain : semblis
+//
+//explained: 
+//	Adds all the rest strings together. This functions can
+//	take multiple string inputs, and they will all be
+//	added together. The string can also be used to add numbers
+//	as if they were string
+//
+//
+//  Argument    type        Definition
+//  ---------------------------------------------------------------
+//  text		string      This is the text to be added
+//
+//
+//Return Type: string
+//
+//Returns:
+//  This function returns the concatenated version of the string
+//	
+//
+//example:
+//  (display (str:+ "this " "is " "a " "test."))
+//  (display (str:+ "this " "is " 34))
+//		
+//doc:end
+
+
+
+
+
+
+
+
 //doc:start
 //game semblis core
 //  (display 'object')

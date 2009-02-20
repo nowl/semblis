@@ -25,9 +25,12 @@
   (make-if &rest))
 
 
-;(cond ((= 1 2) (display "testing"))
-;      ((= 1 3) (display "testing2"))
-;      ('true (display "correct!")
-;             (newline)))
-;(display "finished")
-;(newline)
+(cond ((= 1 2) (display "testing"))
+      ((= 1 3) (display "testing2"))
+      ('true (display "correct!") 
+	   		(newline)
+	   		(display "newline")
+	   		(newline)
+			))
+(display "finished")
+(newline)

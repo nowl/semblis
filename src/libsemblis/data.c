@@ -11,7 +11,6 @@ int MaxNumBlocks;
 int BlocksInUse;
 
 
-
 void data_init(int max_num_blocks)
 {
     int i;

@@ -36,6 +36,9 @@ voidRegex = re.compile('void *[^\*]')
 boolReturnRegex = re.compile('bool *[^\*]')
 charPtrReturnRegex = re.compile('char *?\*')
 dataPtrReturnRegex = re.compile('data_t *?\*')
+floatReturnRegex = re.compile('float\ *[^\*]')
+doubleReturnRegex = re.compile('double\ *[^\*]')
+intReturnRegex = re.compile('.*int|long|float\ *[^\*]')
 
 funcNum = 0
 
@@ -277,7 +280,7 @@ def writeEntrySecFunc(ret, func, args):
 		else:
 			output += '    %s result = %s(%s);\n\n' % (ret.strip(), func, funcArgList)
 
-		if floatRegex.match(ret) or doubleRegex.match(ret):
+		if floatReturnRegex.match(ret) or doubleReturnRegex.match(ret) or intReturnRegex.match(ret):
 			output += '    FF_RET_REAL(result);\n}\n\n'
 		elif boolReturnRegex.match(ret):
 			output += '    if(result)\n'

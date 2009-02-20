@@ -21,7 +21,7 @@
 (newline)
 
 (dan "testing str:find")
-(dan (str:find "this,is,a,test" ",is"))
+(dan (str:find "this,is,a,test" "pis"))
 (dan "should be: 4")
 (newline)
 

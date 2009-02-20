@@ -69,6 +69,7 @@ enum {
     JUMP_EV_SEQUENCE_CONTINUE,   /* 7 */
     JUMP_EV_IF_DECIDE,           /* 8 */
     JUMP_EV_SEQUENCE,            /* 9 */
+    JUMP_EV_IMPORT_AUX,          /*10 */
 };
 
 /*******************/
@@ -526,9 +527,8 @@ static void run_eval_on_string(data_t *input) {
 
 #define MAX_FILENAME_LENGTH  1024
 
-static void run_eval_on_file(data_t *input) {
+static void run_eval_on_file(char *filename) {
     reader_node_t *tmp;
-    char *filename;
     int i;
     char **search_dirs;
     char mod_filename[MAX_FILENAME_LENGTH];
@@ -536,8 +536,6 @@ static void run_eval_on_file(data_t *input) {
 
     save_regs();
 
-    filename = util_to_mbs(input->data.text);
-    
     /* test the various search directories */
     search_dirs = eng_get_search_dirs();    
     for(i=eng_get_num_search_dirs()-1; i>=0; i--) {
@@ -571,13 +569,13 @@ static void run_eval_on_file(data_t *input) {
         } else {
             wchar_t error[256];
             swprintf(error, 256, L"problem reading file: %s", mod_filename);
-            val = data_create(input->filename, input->line_num,
+            val = data_create(val->filename, val->line_num,
                               DT_DATAERROR, error, NULL, NULL);
         }
     } else {
         wchar_t error[256];
         swprintf(error, 256, L"problem finding file: %s", filename);
-        val = data_create(input->filename, input->line_num,
+        val = data_create(val->filename, val->line_num,
                           DT_DATAERROR, error, NULL, NULL);
     }
     
@@ -972,10 +970,25 @@ EVAL_IMPORT:
     dump_regs("EVAL_IMPORT pre");
     exp = CAR(CDR(exp));
 
-    if(IS_STRING_TYPE(exp)) {
-        run_eval_on_file(exp);
+    if(IS_STRING(exp)) {
+        char * filename = util_to_mbs(exp->data.text);
+    
+        run_eval_on_file(filename);
+    } else if(IS_STRING_TYPE(exp)) {
+        //run_eval_on_string(exp);
+        push_stack(cont, ST_CONT);
+
+        cont = JUMP_EV_IMPORT_AUX;
+
+        goto EVAL_DISPATCH;
+
         /* val holds the result of the eval */
-    } else {
+        
+        //char * filename = util_to_mbs(val->data.text);
+    
+        //run_eval_on_file(filename);
+
+    } else {	
         val = data_create(exp->filename, exp->line_num,
                           DT_DATAERROR,
                           L"argument to import is not a string type",
@@ -986,6 +999,25 @@ EVAL_IMPORT:
 
     goto JUMP_TO_CONTINUE;
 
+EVAL_IMPORT_AUX:
+    dump_regs("EVAL_IMPORT pre");
+
+    if(IS_STRING(val)) {
+        char * filename = util_to_mbs(val->data.text);
+    
+        run_eval_on_file(filename);
+    } else {	
+        val = data_create(val->filename, val->line_num,
+                          DT_DATAERROR,
+                          L"argument to import is not a string type",
+                          NULL, NULL);
+    }
+    
+    dump_regs("EVAL_IMPORT post");
+
+    cont = pop_stack();
+
+    goto JUMP_TO_CONTINUE;
 
 EVAL_IF:
     dump_regs("EVAL_IF pre");
@@ -1300,6 +1332,8 @@ JUMP_TO_CONTINUE:
         goto EV_IF_DECIDE;
     case JUMP_MACRO_FINISH:
         goto MACRO_FINISH;
+    case JUMP_EV_IMPORT_AUX:
+        goto EVAL_IMPORT_AUX;
     }
 
 EXIT_EVAL:
@@ -1311,4 +1345,21 @@ EXIT_EVAL:
     restore_regs();
 
     return val_tmp;
+}
+
+DLL_INFO short eval_get_current_val_filename(void)
+{
+   if(val)
+     //return get_filename_by_index(val->filename);
+     return val->filename;
+   else
+     return -1;
+}
+
+DLL_INFO short eval_get_current_val_line_num(void)
+{
+   if(val)
+     return val->line_num;
+   else
+     return 0;
 }
